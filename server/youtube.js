@@ -13,7 +13,7 @@ let getVideoByUrl = (url, callback) => {
 
   request.get(options, function (err, res, body) {
     console.log('---------', JSON.parse(body));
-    callback(JSON.parse(body))
+    callback(body)
   })
 
 }

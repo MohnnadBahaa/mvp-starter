@@ -12,24 +12,40 @@ app.use(express.static(__dirname + '/../react-client/dist'));
 
 app.post('/items', function (req, res) {
   let url = req.body.search;
-  console.log('the url is ', url);
-  youtube.getVideoByUrl(req.body.search, function (data) {
-    console.log('saved data from post: -', data)
-    res.send(items);
-  });
+
+  items.selectAll(url, function (data) {
+    items.Item.find({}).exec(function (err, data) {
+      if (data) {
+        res.send(data);
+        console.log('from DB', data);
+      } else {
+        youtube.getVideoByUrl(url, function (data) {
+          items.save({
+            url: url,
+            info: data
+          });
+          console.log('saved data from post API: -', data)
+          res.send(data.items);
+        });
+      }
+    })
+  })
 });
 
 
 
 app.get('/items', function (req, res) {
-  items.selectAll(function (err, data) {
-    if (err) {
-      res.sendStatus(500);
-    } else {
-      console.log('data get : ', data);
-      res.json(data);
-    }
-  });
+
+  items.Item.find({}).exec(
+    function (err, data) {
+      var comment = data[0].info.items[0].statistics.viewCount;
+      var favoriteCount = data[0].info.items[0].statistics.favoriteCount;
+      var dislikeCount = data[0].info.items[0].statistics.dislikeCount;
+      var likeCount = data[0].info.items[0].statistics.likeCount;
+
+      res.send(comment);
+
+    })
 });
 
 app.listen(3000, function () {

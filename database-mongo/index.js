@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://Mohannad:Mohannad1234@ds115874.mlab.com:15874/testone');
 var db = mongoose.connection;
 db.once('open', function () {
   console.log('mongoose connected successfully');
@@ -32,15 +32,22 @@ let save = (data) => {
   });
 }
 
-var selectAll = function (callback) {
-  Item.find({}, function (err, items) {
+
+
+let selectAll = function (url, callback) {
+  Item.find({
+    url: url
+  }, function (err, data) {
     if (err) {
       callback(err, null);
     } else {
-      callback(null, items);
+      callback(null, data);
     }
   });
 };
 
+
+
 module.exports.save = save;
 module.exports.selectAll = selectAll;
+module.exports.Item = Item;

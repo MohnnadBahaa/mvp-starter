@@ -21,7 +21,7 @@ class App extends React.Component {
       data:JSON.stringify({search:term}),
       contentType: 'application/json',
       success: (data) => {
-        console.log('data from ajax :',data);
+        console.log('asdasdasdasd:',data);
         this.setState({
           items: data
         });
@@ -31,6 +31,22 @@ class App extends React.Component {
       }
     })
   }
+ getdata(){
+   $.ajax({
+     url: '/items',
+     type:'GET',
+     contentType: 'application/json',
+     success: (data) => {
+       this.setState({
+         items: data
+       });
+     },
+     error: (err) => {
+       console.log('err', err);
+     }
+   })
+ }
+
 
   render () {
     return (<div>

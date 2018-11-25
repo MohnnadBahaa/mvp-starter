@@ -1,26 +1,40 @@
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
-
 var db = mongoose.connection;
-
-db.on('error', function() {
-  console.log('mongoose connection error');
-});
-
-db.once('open', function() {
+db.once('open', function () {
   console.log('mongoose connected successfully');
 });
 
+
+// database --------
+
 var itemSchema = mongoose.Schema({
-  quantity: Number,
-  description: String
+  url: String,
+  info: Object
 });
 
-var Item = mongoose.model('Item', itemSchema);
+let Item = mongoose.model('Item', itemSchema);
 
-var selectAll = function(callback) {
-  Item.find({}, function(err, items) {
-    if(err) {
+
+let save = (data) => {
+  // TODO: Your code here
+  // This function should save a repo or repos to
+  // the MongoDB
+  let item = new Item(data);
+  item.save(function (err, res) {
+    if (err) {
+      console.log('error in save', err);
+    } else {
+      console.log('result----- :', res);
+      console.log("Data Saved!");
+    }
+
+  });
+}
+
+var selectAll = function (callback) {
+  Item.find({}, function (err, items) {
+    if (err) {
       callback(err, null);
     } else {
       callback(null, items);
@@ -28,4 +42,5 @@ var selectAll = function(callback) {
   });
 };
 
+module.exports.save = save;
 module.exports.selectAll = selectAll;
